@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.Toast
 import com.example.loginandroidpage.databinding.ActivityRegisterBinding
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -21,14 +20,14 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var firebaseDatabase : FirebaseDatabase
     private lateinit var databaseReference : DatabaseReference
-    private lateinit var firebaseAuth: FirebaseAuth
+//    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseAuth = FirebaseAuth.getInstance()
+//        firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDatabase.reference.child("Users")
 
@@ -108,9 +107,6 @@ class RegisterActivity : AppCompatActivity() {
         databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (!dataSnapshot.exists()){
-                    val user = firebaseAuth.currentUser
-                    val UserId : String? = user?.uid
-                    Toast.makeText(this@RegisterActivity, UserId, Toast.LENGTH_LONG).show()
                     val id = databaseReference.push().key
                     val userData = UserData(id, firstName, lastName, email, phone, password)
                     databaseReference.child(id!!).setValue(userData)
