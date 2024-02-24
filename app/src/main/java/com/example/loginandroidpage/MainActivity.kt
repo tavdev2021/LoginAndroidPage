@@ -5,8 +5,10 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.transition.Visibility
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import com.example.loginandroidpage.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
@@ -20,18 +22,18 @@ import com.google.firebase.database.ValueEventListener
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var firebaseDatabase : FirebaseDatabase
-    private lateinit var databaseReference : DatabaseReference
-//    private lateinit var firebaseAuth: FirebaseAuth
+    //private lateinit var firebaseDatabase : FirebaseDatabase
+    //private lateinit var databaseReference : DatabaseReference
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        firebaseAuth = FirebaseAuth.getInstance()
-        firebaseDatabase = FirebaseDatabase.getInstance()
-        databaseReference = firebaseDatabase.reference.child("Users")
+        firebaseAuth = FirebaseAuth.getInstance()
+        //firebaseDatabase = FirebaseDatabase.getInstance()
+        //databaseReference = firebaseDatabase.reference.child("Users")
 
         val snackbar = Snackbar.make(binding.loginLayout, "No esta conectado a internet, Revise su conexion", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("Aceptar", View.OnClickListener {
@@ -65,20 +67,48 @@ class MainActivity : AppCompatActivity() {
                     binding.emailTextEdit.error = "El email ingresado no es valido"
                     return@setOnClickListener
                 } else {
-                    loginUser(email, password)
+
+                    binding.progressbarindicator.isIndeterminate = true
+                    binding.progressbarindicator.show()
+
+                    firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val id = firebaseAuth.currentUser?.uid
+                        val intent = Intent(this, Dashboard::class.java)
+                        startActivity(intent)
+                        Toast.makeText(this, "Ha iniciado sesión correctamente!", Toast.LENGTH_SHORT).show()
+                        finish()
+
+                        binding.progressbarindicator.isIndeterminate = false
+                        binding.progressbarindicator.hide()
+                        binding.progressbarindicator.isVisible = false
+
+                    } else {
+                        Toast.makeText(this, "Los datos de acceso no son correctos", Toast.LENGTH_SHORT).show()
+                        binding.emailTextEdit.text.clear()
+                        binding.passwordTextEdit.text.clear()
+                        binding.emailTextEdit.requestFocus()
+
+                        binding.progressbarindicator.isIndeterminate = false
+                        binding.progressbarindicator.hide()
+                        binding.progressbarindicator.isVisible = false
+
+                    }
+                    }
                 }
             } else {
                 Toast.makeText(this, "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show()
-            }
+                }
         }
-
+                    //loginUser(email, password)
     }
 
     private fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
+}
 
-    private fun loginUser(email: String, password: String){
+    /*private fun loginUser(email: String, password: String){
         databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()){
@@ -107,8 +137,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "Error en la Base de datos: ${databaseError.message}", Toast.LENGTH_SHORT).show()
             }
         })
-    }
-}
+    }*/
 
 
 

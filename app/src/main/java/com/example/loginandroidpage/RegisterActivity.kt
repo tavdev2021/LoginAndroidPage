@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.example.loginandroidpage.databinding.ActivityRegisterBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -20,14 +22,15 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var firebaseDatabase : FirebaseDatabase
     private lateinit var databaseReference : DatabaseReference
-//    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDatabase.reference.child("Users")
 
@@ -57,10 +60,10 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.registerButton.setOnClickListener {
 
-            val nombre = binding.nameTextEdit.text.toString()
-            val apellido = binding.lastnameTextEdit.text.toString()
+            val nombre = binding.nameTextEdit.text.toString().trimEnd()
+            val apellido = binding.lastnameTextEdit.text.toString().trimEnd()
             val email = binding.emailTextEdit.text.toString().trimEnd()
-            val phone = binding.phoneTextEdit.text.toString()
+            val phone = binding.phoneTextEdit.text.toString().trimEnd()
             val password = binding.passwordTextEdit.text.toString()
             val confirmpassword = binding.confirmpasswordTextEdit.text.toString()
 
@@ -80,6 +83,8 @@ class RegisterActivity : AppCompatActivity() {
             } else if (password.isEmpty()) {
                 binding.passwordTextEdit.error = "La Contraseña es requerida"
                 return@setOnClickListener
+            } else if (password.count() < 6) {
+                binding.passwordTextEdit.error = "La contraseña debe contener al menos 6 caracteres"
             } else if (confirmpassword.isEmpty()) {
                 binding.confirmpasswordTextEdit.error = "Debe confirmar la contraseña"
             } else {
@@ -88,7 +93,27 @@ class RegisterActivity : AppCompatActivity() {
                         binding.emailTextEdit.error = "El Email ingresado no es valido"
                         return@setOnClickListener
                     } else {
-                        signupUser(nombre, apellido, email, phone, password)
+
+                        binding.progressbarindicator.isIndeterminate = true
+                        binding.progressbarindicator.show()
+
+                        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                signupUser(nombre, apellido, email, phone, password)
+
+                                binding.progressbarindicator.isIndeterminate = false
+                                binding.progressbarindicator.hide()
+                                binding.progressbarindicator.isVisible = false
+
+                            } else {
+                                Toast.makeText(this, "El email ya se encuentra registrado", Toast.LENGTH_SHORT).show()
+                                binding.emailTextEdit.requestFocus()
+                                binding.emailTextEdit.text.clear()
+                                binding.progressbarindicator.isIndeterminate = false
+                                binding.progressbarindicator.hide()
+                                binding.progressbarindicator.isVisible = false
+                            }
+                        }
                     }
                 } else {
                     binding.passwordTextEdit.error = "Las contraseñas no coinciden"
@@ -107,7 +132,7 @@ class RegisterActivity : AppCompatActivity() {
         databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (!dataSnapshot.exists()){
-                    val id = databaseReference.push().key
+                    val id = firebaseAuth.currentUser?.uid
                     val userData = UserData(id, firstName, lastName, email, phone, password)
                     databaseReference.child(id!!).setValue(userData)
                     Toast.makeText(this@RegisterActivity, "El registro se ha creado exitosamente", Toast.LENGTH_SHORT).show()
