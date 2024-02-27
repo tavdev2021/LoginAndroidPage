@@ -1,23 +1,21 @@
-package com.example.loginandroidpage
+package com.example.loginandroidpage.view
 
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.transition.Visibility
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
+import com.example.loginandroidpage.util.NetworkManager
 import com.example.loginandroidpage.databinding.ActivityMainBinding
+import com.example.loginandroidpage.util.PreferenceHelper
+import com.example.loginandroidpage.util.PreferenceHelper.defaultPrefs
+import com.example.loginandroidpage.util.PreferenceHelper.get
+import com.example.loginandroidpage.util.PreferenceHelper.set
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +28,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val preferences = PreferenceHelper.defaultPrefs(this)
+        if (preferences ["session", false])
+            goToMenu()
 
         firebaseAuth = FirebaseAuth.getInstance()
         //firebaseDatabase = FirebaseDatabase.getInstance()
@@ -47,8 +49,10 @@ class MainActivity : AppCompatActivity() {
 
             if (!it) {
                 snackbar.show()
+                binding.loginButton.isClickable = false
             } else {
                 snackbar.dismiss()
+                binding.loginButton.isClickable = true
             }
         }
 
@@ -74,10 +78,8 @@ class MainActivity : AppCompatActivity() {
                     firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
                     if (it.isSuccessful) {
                         val id = firebaseAuth.currentUser?.uid
-                        val intent = Intent(this, Dashboard::class.java)
-                        startActivity(intent)
-                        Toast.makeText(this, "Ha iniciado sesión correctamente!", Toast.LENGTH_SHORT).show()
-                        finish()
+                        goToMenu()
+                        Toast.makeText(this, "Ha iniciado sesion correctamente", Toast.LENGTH_SHORT).show()
 
                         binding.progressbarindicator.isIndeterminate = false
                         binding.progressbarindicator.hide()
@@ -93,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                         binding.progressbarindicator.hide()
                         binding.progressbarindicator.isVisible = false
 
-                    }
+                        }
                     }
                 }
             } else {
@@ -101,6 +103,18 @@ class MainActivity : AppCompatActivity() {
                 }
         }
                     //loginUser(email, password)
+    }
+
+    private fun goToMenu() {
+        val intent = Intent(this, Dashboard::class.java)
+        createSessionPreference()
+        startActivity(intent)
+        finish()
+    }
+
+    private fun createSessionPreference() {
+        val preferences = defaultPrefs(this)
+        preferences["session"] = true
     }
 
     private fun String.isEmailValid(): Boolean {

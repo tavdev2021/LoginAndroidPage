@@ -24,16 +24,16 @@
         android:theme="@style/Theme.LoginAndroidPage"
         tools:targetApi="31">
         <activity
-            android:name=".SaveImageActivity"
+            android:name=".view.SaveImageActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".view.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".Dashboard"
+            android:name=".view.Dashboard"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

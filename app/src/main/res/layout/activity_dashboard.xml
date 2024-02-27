@@ -6,13 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    tools:context=".Dashboard">
+    android:gravity="top"
+    tools:context=".view.Dashboard">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
+        android:layout_margin="5dp"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp">
 
@@ -24,12 +24,48 @@
             android:padding="24dp"
             android:background="@drawable/custom_edittext">
 
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="DashBoard Screen"
-                android:textSize="36sp"
+                android:text="Bienvenido"
+                android:textSize="20sp"
                 android:textAlignment="center"
+                android:textStyle="bold"
+                android:textColor="@color/lavender"/>
+
+
+            <TextView
+                android:id="@+id/userNameLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginTop="20dp"
+                android:textSize="18sp"
+                android:textAlignment="textStart"
+                android:textStyle="bold"
+                android:textColor="@color/lavender"/>
+
+
+            <TextView
+                android:id="@+id/userPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:textAlignment="textStart"
+                android:textStyle="bold"
+                android:textColor="@color/lavender"/>
+
+            <TextView
+                android:id="@+id/userEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_marginTop="10dp"
+                android:textSize="18sp"
+                android:textAlignment="textStart"
                 android:textStyle="bold"
                 android:textColor="@color/lavender"/>
 
@@ -39,7 +75,9 @@
                 android:text="Salir"
                 android:id="@+id/closeButton"
                 android:textSize="18sp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
                 android:backgroundTint="@color/lavender"/>
 
         </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.loginandroidpage
+package com.example.loginandroidpage.model
 
 data class UserData (
     val id: String? = null,

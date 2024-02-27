@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="top"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progressbarindicator"
@@ -28,7 +28,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
+        android:layout_margin="20dp"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp">
 
@@ -138,17 +138,17 @@
                 android:layout_marginTop="30dp"
                 android:backgroundTint="@color/lavender"/>
 
+                <TextView
+                    android:id="@+id/tvLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Ya estas registrado? Inicia Sesion."
+                    android:textAlignment="center"
+                    android:textColor="@color/azullink"
+                    android:textSize="16dp"
+                    android:textStyle="italic"/>
 
-            <TextView
-                android:id="@+id/tvLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ya estas registrado? Inicia Sesion."
-                android:textAlignment="center"
-                android:layout_marginTop="15dp"
-                android:textSize="16dp"
-                android:textStyle="italic"
-                android:textColor="@color/azullink"/>
 
         </LinearLayout>
 

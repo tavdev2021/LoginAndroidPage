@@ -1,7 +1,6 @@
-package com.example.loginandroidpage
+package com.example.loginandroidpage.view
 
 import android.app.Activity
-import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -26,19 +25,20 @@ class SaveImageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.ImageSelector.setOnClickListener {
-            SelectImage()
+            selectImage()
         }
 
         binding.btnConfirmar.setOnClickListener {
-            Endesarrollo()
+            saveImage()
         }
 
         binding.btnOmitir.setOnClickListener {
-            OmitirImage()
+            omitirImage()
         }
     }
 
-    private val startImageForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {result : androidx.activity.result.ActivityResult ->
+    private val startImageForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+    {result : androidx.activity.result.ActivityResult ->
 
         val resultCode = result.resultCode
         val data = result.data
@@ -56,7 +56,7 @@ class SaveImageActivity : AppCompatActivity() {
 
     }
 
-    private fun SelectImage(){
+    private fun selectImage(){
         ImagePicker.with(this)
             .crop()
             .compress(1024)
@@ -67,7 +67,7 @@ class SaveImageActivity : AppCompatActivity() {
     }
 
 
-            private fun Endesarrollo(){
+            private fun saveImage(){
         val snackbar = Snackbar.make(binding.saveImageLayout, "Se esta desarrollando esta funcion", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("Aceptar", View.OnClickListener {
             snackbar.dismiss()
@@ -78,7 +78,7 @@ class SaveImageActivity : AppCompatActivity() {
             }
 
 
-    private fun OmitirImage() {
+    private fun omitirImage() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()

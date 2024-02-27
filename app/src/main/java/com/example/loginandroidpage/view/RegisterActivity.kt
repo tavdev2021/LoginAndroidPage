@@ -1,4 +1,4 @@
-package com.example.loginandroidpage
+package com.example.loginandroidpage.view
 
 import android.content.Intent
 import android.graphics.Color
@@ -8,6 +8,8 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
+import com.example.loginandroidpage.util.NetworkManager
+import com.example.loginandroidpage.model.UserData
 import com.example.loginandroidpage.databinding.ActivityRegisterBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -47,8 +49,10 @@ class RegisterActivity : AppCompatActivity() {
 
             if (!it) {
                 snackbar.show()
+                binding.registerButton.isClickable = false
             } else {
                 snackbar.dismiss()
+                binding.registerButton.isClickable = true
             }
         }
 

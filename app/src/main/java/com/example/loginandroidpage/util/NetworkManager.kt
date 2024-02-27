@@ -1,4 +1,4 @@
-package com.example.loginandroidpage
+package com.example.loginandroidpage.util
 
 import android.content.Context
 import android.net.ConnectivityManager
