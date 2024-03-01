@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:indeterminate="false"
         android:visibility="gone"
-        app:indicatorColor="@color/lavender" />
+        app:indicatorColor="@color/lavender"/>
 
     <LinearLayout
         android:layout_width="match_parent"

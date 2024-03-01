@@ -1,6 +1,7 @@
 package com.example.loginandroidpage.view
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,8 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.loginandroidpage.R
 import com.example.loginandroidpage.databinding.ActivityDashboardBinding
 import com.example.loginandroidpage.util.PreferenceHelper
@@ -45,10 +48,10 @@ class Dashboard : AppCompatActivity() {
             Toast.makeText(this, "El usuario no esta autenticado", Toast.LENGTH_SHORT).show()
         }
 
-        binding.closeButton.setOnClickListener {
+        binding.linearLayoutLogout.setOnClickListener {
             clearSessionPreference()
             firebaseAuth.signOut()
-            finish()
+            goToLogin()
         }
     }
 
@@ -62,10 +65,22 @@ class Dashboard : AppCompatActivity() {
                 val telefono = dataSnapshot.child("telefono").value
                 val email = dataSnapshot.child("email").value
                 val nombreapellido = nombre.toString() + " " + apellido.toString()
+                val imageUrl = dataSnapshot.child("urlImagen").value
 
                 binding.userNameLastName.text = nombreapellido
                 binding.userPhone.text = telefono.toString()
                 binding.userEmail.text = email.toString()
+
+                Glide
+                    .with(this)
+                    .load(imageUrl)
+                    .fitCenter()
+                    .circleCrop()
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.progress_animation)
+                    .error(R.drawable.try_later)
+                    .into(binding.ImageViewProfile)
 
             } else {
                 Toast.makeText(this, "No existe la sesion", Toast.LENGTH_SHORT).show()
@@ -79,6 +94,12 @@ class Dashboard : AppCompatActivity() {
     private fun clearSessionPreference() {
         val preferences = defaultPrefs(this)
         preferences["session"] = false
+    }
+
+    private fun goToLogin() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
 

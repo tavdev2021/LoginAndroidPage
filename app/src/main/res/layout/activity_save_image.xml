@@ -12,6 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressbarindicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:visibility="gone"
+            app:indicatorColor="@color/green"/>
         
         <FrameLayout
             android:layout_width="match_parent"
@@ -39,7 +47,7 @@
         android:id="@+id/ImageSelector"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_user"
+        android:src="@drawable/addimageuser"
         android:layout_marginTop="110dp"
         app:civ_border_color="@color/gray"
         app:civ_border_width="5dp"

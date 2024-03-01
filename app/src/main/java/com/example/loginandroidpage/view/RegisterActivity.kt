@@ -37,6 +37,7 @@ class RegisterActivity : AppCompatActivity() {
         databaseReference = firebaseDatabase.reference.child("Users")
 
 
+
         val snackbar = Snackbar.make(binding.registerLayout, "No esta conectado a internet, Revise su conexion", Snackbar.LENGTH_INDEFINITE)
         snackbar.setAction("Aceptar", View.OnClickListener {
             snackbar.dismiss()
