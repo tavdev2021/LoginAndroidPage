@@ -3,6 +3,6 @@
 <animated-rotate
     xmlns:android=
         "http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/loadingimage"
+    android:drawable="@drawable/loading_image"
     android:pivotX="50%"
     android:pivotY="50%"/>

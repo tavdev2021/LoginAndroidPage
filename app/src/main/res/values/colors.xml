@@ -6,6 +6,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="lavender">#8692f7</color>
+    <color name="coloToolbarStart">#5865DC</color>
+    <color name="colorToolbarEnd">#8692f7</color>
     <color name="red">#CD180A</color>
     <color name="green">#4CAF50</color>
     <color name="azullink">#0000FF</color>

@@ -5,7 +5,6 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.example.loginandroidpage.util.NetworkManager
@@ -13,11 +12,8 @@ import com.example.loginandroidpage.model.UserData
 import com.example.loginandroidpage.databinding.ActivityRegisterBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -39,9 +35,6 @@ class RegisterActivity : AppCompatActivity() {
 
 
         val snackbar = Snackbar.make(binding.registerLayout, "No esta conectado a internet, Revise su conexion", Snackbar.LENGTH_INDEFINITE)
-        snackbar.setAction("Aceptar", View.OnClickListener {
-            snackbar.dismiss()
-        })
         snackbar.setActionTextColor(Color.WHITE)
         snackbar.setBackgroundTint(Color.BLUE)
 
@@ -58,19 +51,21 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.tvLogin.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            goToLogin()
+        }
+
+        binding.ivBackButton.setOnClickListener {
+            goToLogin()
         }
 
         binding.registerButton.setOnClickListener {
 
-            val nombre = binding.nameTextEdit.text.toString().trimEnd()
-            val apellido = binding.lastnameTextEdit.text.toString().trimEnd()
-            val email = binding.emailTextEdit.text.toString().trimEnd()
-            val phone = binding.phoneTextEdit.text.toString().trimEnd()
-            val password = binding.passwordTextEdit.text.toString()
-            val confirmpassword = binding.confirmpasswordTextEdit.text.toString()
+            val nombre = binding.nameTextEdit.editText?.text.toString().trim()
+            val apellido = binding.lastnameTextEdit.editText?.text.toString().trim()
+            val email = binding.emailTextEdit.editText?.text.toString().trim()
+            val phone = binding.phoneTextEdit.editText?.text.toString().trim()
+            val password = binding.passwordTextEdit.editText?.text.toString()
+            val confirmpassword = binding.confirmpasswordTextEdit.editText?.text.toString()
 
 
             if (nombre.isEmpty()) {
@@ -85,13 +80,18 @@ class RegisterActivity : AppCompatActivity() {
             } else if (phone.isEmpty()) {
                 binding.phoneTextEdit.error = "El Telefono es requerido"
                 return@setOnClickListener
+            }else if (phone.count() < 10) {
+                binding.phoneTextEdit.error = "Complete su numero a 10 digitos"
+                return@setOnClickListener
             } else if (password.isEmpty()) {
                 binding.passwordTextEdit.error = "La Contraseña es requerida"
                 return@setOnClickListener
             } else if (password.count() < 6) {
                 binding.passwordTextEdit.error = "La contraseña debe contener al menos 6 caracteres"
+                return@setOnClickListener
             } else if (confirmpassword.isEmpty()) {
                 binding.confirmpasswordTextEdit.error = "Debe confirmar la contraseña"
+                return@setOnClickListener
             } else {
                 if (password == confirmpassword) {
                     if (!email.isEmailValid()) {
@@ -104,20 +104,27 @@ class RegisterActivity : AppCompatActivity() {
 
                         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                             if (it.isSuccessful) {
-                                signupUser(nombre, apellido, email, phone, password)
 
-                                binding.progressbarindicator.isIndeterminate = false
-                                binding.progressbarindicator.hide()
-                                binding.progressbarindicator.isVisible = false
+                                firebaseAuth.currentUser?.sendEmailVerification()?.addOnSuccessListener {
 
-                            } else {
-                                Toast.makeText(this, "El email ya se encuentra registrado", Toast.LENGTH_SHORT).show()
-                                binding.emailTextEdit.requestFocus()
-                                binding.emailTextEdit.text.clear()
-                                binding.progressbarindicator.isIndeterminate = false
-                                binding.progressbarindicator.hide()
-                                binding.progressbarindicator.isVisible = false
+                                    signupUser(nombre, apellido, phone)
+
+                                    binding.progressbarindicator.isIndeterminate = false
+                                    binding.progressbarindicator.hide()
+                                    binding.progressbarindicator.isVisible = false
+                                }
+                                    ?.addOnFailureListener { err ->
+                                    Toast.makeText(this, err.toString(), Toast.LENGTH_SHORT).show()
+                                    }
+
                             }
+                        }.addOnFailureListener {
+                            Toast.makeText(this, "El correo ya se encuentra registrado en la base de datos", Toast.LENGTH_SHORT).show()
+                            binding.emailTextEdit.editText!!.text.clear()
+                            binding.emailTextEdit.requestFocus()
+                            binding.progressbarindicator.isIndeterminate = false
+                            binding.progressbarindicator.hide()
+                            binding.progressbarindicator.isVisible = false
                         }
                     }
                 } else {
@@ -129,63 +136,28 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun goToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun String.isEmailValid(): Boolean {
         return !TextUtils.isEmpty(this) && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 
-    private fun signupUser(firstName: String, lastName: String, email: String, phone: String, password: String){
-        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (!dataSnapshot.exists()){
+    private fun signupUser(firstName: String, lastName: String, phone: String){
+
                     val id = firebaseAuth.currentUser?.uid
-                    val userData = UserData(id, firstName, lastName, email, phone, password)
+                    val userData = UserData(firstName, lastName, phone)
                     databaseReference.child(id!!).setValue(userData)
                     Toast.makeText(this@RegisterActivity, "El registro se ha creado exitosamente", Toast.LENGTH_SHORT).show()
                     intent = Intent(this@RegisterActivity, SaveImageActivity::class.java)
                     startActivity(intent)
                     finish()
-                } else {
-                    Toast.makeText(this@RegisterActivity, "El correo ya esta registrado en la Base de datos", Toast.LENGTH_SHORT).show()
-                }
-            }
+    }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(this@RegisterActivity, "Error en la Base de datos: ${databaseError.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+    override fun onBackPressed() {
+       goToLogin()
     }
 }
-
-
-
-//      binding.registerButton.setOnClickListener {
-//
-//            val nombre = binding.nameTextEdit.text.toString()
-//            val apellido = binding.lastnameTextEdit.text.toString()
-//            val email = binding.emailTextEdit.text.toString()
-//            val pass = binding.passwordTextEdit.text.toString()
-//            val confirmpass = binding.confirmpasswordTextEdit.text.toString()
-//
-//            if (nombre.isNotEmpty() && apellido.isNotEmpty() && email.isNotEmpty() && pass.isNotEmpty() && confirmpass.isNotEmpty()){
-//
-//                if (pass == confirmpass) {
-//
-//                    firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
-//                        if (it.isSuccessful){
-//
-//                            Toast.makeText(this, "El registro se ha creado exitosamente", Toast.LENGTH_SHORT).show()
-//                            val intent = Intent(this, MainActivity::class.java)
-//                            startActivity(intent)
-//                            finish()
-//
-//                        } else {
-//                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
-//                } else {
-//                    Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
-//                }
-//            } else {
-//                Toast.makeText(this, "Los campos no deben estar vacios", Toast.LENGTH_SHORT).show()
-//            }
-//        }

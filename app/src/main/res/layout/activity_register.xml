@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="top"
-    tools:context=".view.MainActivity">
+    tools:context=".view.RegisterActivity">
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progressbarindicator"
@@ -15,15 +15,39 @@
         android:layout_height="wrap_content"
         android:indeterminate="false"
         android:visibility="gone"
-        app:indicatorColor="@color/lavender"/>
+        app:indicatorColor="@color/green" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_below="@id/progressbarindicator"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:background="@drawable/toolbar_header"/>
+
+    <LinearLayout
+        android:id="@+id/BackButtonLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:id="@+id/ivBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:src="@drawable/baseline_arrow_back_24">
+        </ImageView>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:id="@+id/registerLayout"
-        android:background="@drawable/pantalla">
+        android:layout_marginTop="70dp"
+        android:id="@+id/registerLayout">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -49,84 +73,125 @@
             android:textStyle="bold"
             android:textColor="@color/lavender"/>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/nameTextEdit"
-                android:background="@drawable/custom_edittext"
-                android:layout_marginTop="30dp"
-                android:padding="8dp"
+                android:layout_marginTop="5dp"
+                app:errorEnabled="true"
+                app:errorTextColor="#D50000"
+                app:errorIconDrawable="@null"
                 android:hint="Nombre"
-                android:inputType="textCapWords"
-                android:drawableStart="@drawable/baseline_account_circle_24"
-                android:textColor="@color/black"
-                android:drawablePadding="8dp"/>
+                app:startIconDrawable="@drawable/baseline_person_24">
 
-            <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textCapWords"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/lastnameTextEdit"
-                android:background="@drawable/custom_edittext"
-                android:layout_marginTop="10dp"
-                android:padding="8dp"
+                android:layout_marginTop="5dp"
+                app:errorEnabled="true"
+                app:errorTextColor="#D50000"
+                app:errorIconDrawable="@null"
                 android:hint="Apellido"
-                android:inputType="textCapWords"
-                android:drawableStart="@drawable/baseline_account_circle_24"
-                android:textColor="@color/black"
-                android:drawablePadding="8dp"/>
+                app:startIconDrawable="@drawable/baseline_person_24"
+                app:helperTextTextColor="#D50000">
 
-            <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textCapWords"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/emailTextEdit"
-                android:background="@drawable/custom_edittext"
-                android:layout_marginTop="10dp"
-                android:padding="8dp"
+                android:layout_marginTop="5dp"
+                app:errorEnabled="true"
+                app:errorTextColor="#D50000"
+                app:errorIconDrawable="@null"
                 android:hint="Correo"
-                android:inputType="textEmailAddress"
-                android:drawableStart="@drawable/email"
-                android:textColor="@color/black"
-                android:drawablePadding="8dp"/>
+                app:startIconDrawable="@drawable/baseline_email_24">
 
-            <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textEmailAddress"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/phoneTextEdit"
-                android:background="@drawable/custom_edittext"
-                android:layout_marginTop="10dp"
-                android:padding="8dp"
+                android:layout_marginTop="5dp"
+                app:errorEnabled="true"
+                app:errorTextColor="#D50000"
+                app:errorIconDrawable="@null"
                 android:hint="Telefono (10 Digitos)"
-                android:maxLength="10"
-                android:inputType="phone"
-                android:drawableStart="@drawable/baseline_add_call_24"
-                android:textColor="@color/black"
-                android:drawablePadding="8dp"/>
+                app:startIconDrawable="@drawable/baseline_phone_24">
 
-            <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="phone"
+                    android:maxLength="10"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/passwordTextEdit"
-                android:background="@drawable/custom_edittext"
-                android:layout_marginTop="10dp"
-                android:padding="8dp"
-                android:hint="Contraseña (Min. 6 Caracteres)"
-                android:inputType="textPassword"
-                android:drawableStart="@drawable/baseline_lock_24"
-                android:textColor="@color/black"
-                android:drawablePadding="8dp"/>
+                android:layout_marginTop="5dp"
+                app:errorEnabled="true"
+                app:errorTextColor="#D50000"
+                app:errorIconDrawable="@null"
+                android:hint="Contraseña (Min. 6 caracteres)"
+                app:startIconDrawable="@drawable/baseline_lock_24"
+                app:endIconMode="password_toggle">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
+                android:inputType="textPassword"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/confirmpasswordTextEdit"
-                android:background="@drawable/custom_edittext"
-                android:layout_marginTop="10dp"
-                android:padding="8dp"
+                android:layout_marginTop="5dp"
+                app:errorEnabled="true"
+                app:errorTextColor="#D50000"
+                app:errorIconDrawable="@null"
                 android:hint="Repetir Contraseña"
-                android:inputType="textPassword"
-                android:drawableStart="@drawable/baseline_lock_24"
-                android:textColor="@color/black"
-                android:drawablePadding="8dp"/>
+                app:startIconDrawable="@drawable/baseline_lock_24"
+                app:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textPassword"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <Button
@@ -135,14 +200,14 @@
                 android:text="Registrar"
                 android:id="@+id/registerButton"
                 android:textSize="18sp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:backgroundTint="@color/lavender"/>
 
                 <TextView
                     android:id="@+id/tvLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:text="Ya estas registrado? Inicia Sesion."
                     android:textAlignment="center"
                     android:textColor="@color/azullink"
@@ -156,4 +221,4 @@
 
 </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

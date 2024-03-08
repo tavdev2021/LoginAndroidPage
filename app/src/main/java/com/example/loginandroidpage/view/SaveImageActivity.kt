@@ -15,6 +15,7 @@ import com.example.loginandroidpage.util.NetworkManager
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -42,9 +43,6 @@ class SaveImageActivity : AppCompatActivity() {
         databaseReference = firebaseDatabase.reference.child("Users")
 
         val snackbar = Snackbar.make(binding.saveImageLayout, "No esta conectado a internet, Revise su conexion", Snackbar.LENGTH_INDEFINITE)
-        snackbar.setAction("Aceptar", View.OnClickListener {
-            snackbar.dismiss()
-        })
         snackbar.setActionTextColor(Color.WHITE)
         snackbar.setBackgroundTint(Color.BLUE)
 
@@ -144,7 +142,7 @@ class SaveImageActivity : AppCompatActivity() {
 
                         // Actualizar la URL de la imagen en la base de datos en tiempo real
                         actualizarURLenDatabase(downloadUri.toString())
-                        goToLogin()
+                        goToVerifyEmailScreen()
                     } else {
                         // Manejar el fallo de obtener la URL de la imagen
                         // ...
@@ -166,7 +164,7 @@ class SaveImageActivity : AppCompatActivity() {
         databaseReference.updateChildren(childUpdates)
             .addOnSuccessListener {
                 // Manejar el éxito de la actualización de la URL en la base de datos
-                Toast.makeText(this, "La imagen se guardo correctamente", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "El registro se ha completado", Toast.LENGTH_SHORT).show()
                 binding.progressbarindicator.isIndeterminate = false
                 binding.progressbarindicator.hide()
                 binding.progressbarindicator.isVisible = false
@@ -176,24 +174,16 @@ class SaveImageActivity : AppCompatActivity() {
                 Toast.makeText(this, "Fallo al actualizar la url", Toast.LENGTH_SHORT).show()
             }
     }
-    private fun goToLogin() {
-        val intent = Intent(this, MainActivity::class.java)
+
+    private fun goToVerifyEmailScreen() {
+        val intent = Intent(this, VerificationEmailActivity::class.java)
         startActivity(intent)
         finish()
     }
+
     private fun omitirImage() {
         val defaultImageUrl  = "https://firebasestorage.googleapis.com/v0/b/loginandroidpage.appspot.com/o/DefaultUserImage%2Fdefaultuserprofile.png?alt=media&token=7c2c659e-dec4-4c34-bb3b-256ce75bbf52"
         actualizarURLenDatabase(defaultImageUrl)
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        goToVerifyEmailScreen()
     }
 }
-
-        /*val snackbar = Snackbar.make(binding.saveImageLayout, "Se esta desarrollando esta funcion", Snackbar.LENGTH_INDEFINITE)
-        snackbar.setAction("Aceptar", View.OnClickListener {
-            snackbar.dismiss()
-        })
-        snackbar.setActionTextColor(Color.WHITE)
-        snackbar.setBackgroundTint(Color.BLUE)
-        snackbar.show()*/
