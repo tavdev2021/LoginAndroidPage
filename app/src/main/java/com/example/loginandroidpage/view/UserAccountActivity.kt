@@ -85,7 +85,7 @@ class UserAccountActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-                .setNeutralButton("No eliminar") {_,_ ->
+                .setNeutralButton("Cancelar") {_,_ ->
                     Toast.makeText(this, "Se cancelo la tarea", Toast.LENGTH_SHORT).show()
                 }
                 .setIcon(R.drawable.alertdiag)
